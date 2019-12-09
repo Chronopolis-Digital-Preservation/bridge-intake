@@ -52,7 +52,7 @@ verify:jdk8:
     paths:
       - target/surefire-reports/
 
-deploy: &deploy
+.deploy:base:  &deploy_base
   stage: deploy
   only:
     - tags
@@ -63,11 +63,13 @@ deploy: &deploy
 # Mount your `settings.xml` as `/root/.m2/settings.xml` which holds your secrets.
 # See https://maven.apache.org/settings.html
 deploy:jdk8:
+  <<: *deploy_base
   script:
     - 'mvn $MAVEN_CLI_OPTS deploy'
 
 # Create the rpm for the build and upload it to our artifact server
 rpm:
+  <<: *deploy_base
   before_script:
     - apt-get update -y
     - apt-get install -y rpm
